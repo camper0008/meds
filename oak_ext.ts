@@ -52,7 +52,7 @@ function adminPageHtml(pills: string[]) {
   `;
 }
 
-export function listen(port: number) {
+export async function listen(port: number) {
   const secret = prompt("enter secret");
 
   const routes = new Router();
@@ -89,7 +89,7 @@ export function listen(port: number) {
   app.use(routes.allowedMethods());
 
   console.log("listening on", port);
-  app.listen({ port });
+  await app.listen({ port });
 }
 
 Deno.cron("update at 20 00", "0 20 * * *", () => {

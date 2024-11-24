@@ -16,7 +16,7 @@ async function main() {
       const port = Deno.args[1];
       try {
         const parsed = parseInt(port);
-        listen(parsed);
+        await listen(parsed);
       } catch {
         console.error(`invalid port '${port}', expected int`);
         Deno.exit(1);
