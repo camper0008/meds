@@ -19,6 +19,7 @@ async function main() {
         listen(parsed);
       } catch {
         console.error(`invalid port '${port}', expected int`);
+        Deno.exit(1);
       }
       break;
     }
@@ -26,8 +27,10 @@ async function main() {
       console.error(
         `unrecognized action '${action}', expected 'ext-serve' | 'status' | 'update'`,
       );
+      Deno.exit(1);
     }
   }
+  Deno.exit(0);
 }
 
 if (import.meta.main) {
