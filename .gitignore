@@ -1,0 +1,8 @@
+# ignore anything but examples
+pills/*
+!pills/example.json
+restock/*
+!restock/example.json
+
+# ignore compiled binary
+meds
