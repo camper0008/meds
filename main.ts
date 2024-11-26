@@ -1,5 +1,5 @@
-import { render, status, update } from "./lib.ts";
-import { listen } from "./oak_ext.ts";
+import { render, status, update } from "./mod.ts";
+import { listen } from "./oak_ext/mod.ts";
 
 async function main() {
   const action = Deno.args[0];

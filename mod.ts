@@ -3,6 +3,7 @@ export type Pill = {
   perDay: number;
   count: number;
   daysLeft: number;
+  leftOver: number;
 };
 
 type PillTableLength = {
@@ -28,7 +29,8 @@ function filePillToPill(name: string, pill: FilePill): Pill {
   return {
     perDay: pill.perDay,
     count: pill.count,
-    daysLeft: calculatePillsLeft(pill),
+    daysLeft: Math.max(0, Math.floor(pill.count / pill.perDay)),
+    leftOver: Math.max(0, pill.count % pill.perDay),
     name,
   };
 }
@@ -121,16 +123,13 @@ async function runTask(update: boolean = true): Promise<Result> {
   return { pills, errors };
 }
 
-function calculatePillsLeft({ count, perDay }: FilePill): number {
-  return Math.max(Math.floor(count / perDay), 0);
-}
-
 export function render({ pills, errors }: Result): string {
   const defaultLength = {
     name: 0,
     perDay: 0,
     count: 0,
     daysLeft: 0,
+    leftOver: 0,
   };
 
   const count = (lengths: PillTableLength, pill: Pill, key: keyof Pill) =>
@@ -142,6 +141,7 @@ export function render({ pills, errors }: Result): string {
       perDay: count(acc, pill, "perDay"),
       count: count(acc, pill, "count"),
       daysLeft: count(acc, pill, "daysLeft"),
+      leftOver: count(acc, pill, "leftOver"),
     }),
     defaultLength,
   );
@@ -160,7 +160,8 @@ export function render({ pills, errors }: Result): string {
   const divider = "+" + "-".repeat(columnLength.name + 2) + "+" +
     "-".repeat(columnLength.count + 2) + "+" +
     "-".repeat(columnLength.perDay + 2) + "+" +
-    "-".repeat(columnLength.daysLeft + 2) + "+";
+    "-".repeat(columnLength.daysLeft + 2) + "+" +
+    "-".repeat(columnLength.leftOver + 2) + "+";
 
   const rows = pills.map(
     (pill) =>
@@ -168,7 +169,7 @@ export function render({ pills, errors }: Result): string {
         paddedFromKey(pill, columnLength, "count")
       } | ${paddedFromKey(pill, columnLength, "perDay")} | ${
         paddedFromKey(pill, columnLength, "daysLeft")
-      } |`,
+      } | ${paddedFromKey(pill, columnLength, "leftOver")} |`,
   );
 
   const paddedLegend = (length: PillTableLength, key: keyof Pill) =>
@@ -178,7 +179,7 @@ export function render({ pills, errors }: Result): string {
     paddedLegend(columnLength, "count")
   } | ${paddedLegend(columnLength, "perDay")} | ${
     paddedLegend(columnLength, "daysLeft")
-  } |`;
+  } | ${paddedLegend(columnLength, "leftOver")} |`;
 
   rows.unshift(legend);
 
