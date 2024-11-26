@@ -1,7 +1,7 @@
 import { Application } from "jsr:@oak/oak/application";
 import { Router } from "jsr:@oak/oak/router";
-import { join } from "jsr:@std/path/join";
-import { render, restock, status, update } from "../mod.ts";
+import { type Pill, render, restock, status, update } from "./mod.ts";
+import * as tmpl from "./oak_ext.tmpl.ts";
 
 type RestockBody = {
   name: string;
@@ -9,28 +9,12 @@ type RestockBody = {
   secret: string;
 };
 
-async function indexPageHtml(table: string) {
-  const path = join(import.meta.dirname ?? "", "index.tmpl.html");
-  const template = await Deno.readTextFile(path);
-  return template.replace(
-    "${#0}",
-    table,
-  );
+function indexPageHtml(table: string) {
+  return tmpl.index(table);
 }
 
-async function adminPageHtml(pills: string[]) {
-  const path = join(import.meta.dirname ?? "", "admin.tmpl.html");
-  const template = await Deno.readTextFile(path);
-  const options = pills.map((pill) =>
-    `<option value="${pill}">${pill}</option>`
-  ).reduce((
-    a,
-    v,
-  ) => a + v);
-  return template.replace(
-    "${#0}",
-    options,
-  );
+function adminPageHtml(pills: Pill["name"][]) {
+  return tmpl.admin(pills);
 }
 
 export async function listen(port: number) {
