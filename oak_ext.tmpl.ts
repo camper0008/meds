@@ -5,6 +5,7 @@ function root(head: string, body: string) {
 <html>
   <head>
     <style>:root { color-scheme: light dark; }</style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     ${head}
   </head>
   <body>
@@ -14,7 +15,14 @@ function root(head: string, body: string) {
 }
 
 export function index(table: string) {
-  return root("", table);
+  const split = table.split("\n");
+  const padded = split.map((v) => `  ${v}  `).reduce((acc, v) =>
+    acc + "\n" + v
+  );
+  return root(
+    "<style>body { margin: 0; }</style>",
+    `<pre>${`\n${padded}\n`}</pre>`,
+  );
 }
 
 export function admin(pills: Pill["name"][]) {
