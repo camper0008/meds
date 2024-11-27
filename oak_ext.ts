@@ -18,7 +18,7 @@ function adminPageHtml(pills: Pill["name"][]) {
 }
 
 export async function listen(port: number) {
-  const secret = prompt("enter secret");
+  const secret = prompt("enter secret:");
 
   const routes = new Router();
   routes.get("/", async (ctx) => {
