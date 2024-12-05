@@ -39,7 +39,7 @@ export function admin(pills: Pill["name"][]) {
         ${options}
       </select></p>
       <p><label for="count">count</label>
-      <input id="count" name="count" type="number"></p>
+      <input id="count" name="count" type="text"></p>
       <p><label for="secret">secret</label>
       <input id="secret" name="secret" type="text"></p>
       <input type="submit" value="restock">
