@@ -29,8 +29,12 @@ function filePillToPill(name: string, pill: FilePill): Pill {
   return {
     perDay: pill.perDay,
     count: pill.count,
-    daysLeft: Math.max(0, Math.floor(pill.count / pill.perDay)),
-    leftOver: Math.max(0, pill.count % pill.perDay),
+    daysLeft: pill.perDay !== 0
+      ? Math.max(0, Math.floor(pill.count / pill.perDay))
+      : 0,
+    leftOver: pill.perDay !== 0
+      ? Math.max(0, pill.count % pill.perDay)
+      : pill.count,
     name,
   };
 }
