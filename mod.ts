@@ -10,7 +10,10 @@ type PillTableLength = {
   [key in keyof Pill]: number;
 };
 
-type FilePill = Omit<Omit<Pill, "daysLeft">, "name">;
+type FilePill = {
+  perDay: Pill["perDay"];
+  count: Pill["count"];
+};
 
 type Restock = {
   name: string;
@@ -26,12 +29,13 @@ function isExample(name: string) {
 }
 
 function filePillToPill(name: string, pill: FilePill): Pill {
+  const daysLeft = pill.perDay !== 0
+    ? Math.max(0, Math.floor(pill.count / pill.perDay))
+    : 0;
   return {
     perDay: pill.perDay,
     count: pill.count,
-    daysLeft: pill.perDay !== 0
-      ? Math.max(0, Math.floor(pill.count / pill.perDay))
-      : 0,
+    daysLeft,
     leftOver: pill.perDay !== 0
       ? Math.max(0, pill.count % pill.perDay)
       : pill.count,
@@ -127,7 +131,9 @@ async function runTask(update: boolean = true): Promise<Result> {
   return { pills, errors };
 }
 
-export function render({ pills, errors }: Result): string {
+export function render({ pills: unsortedPills, errors }: Result): string {
+  const pills = unsortedPills.toSorted((a, b) => a.name.localeCompare(b.name));
+
   const defaultLength = {
     name: 0,
     perDay: 0,
