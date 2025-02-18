@@ -1,7 +1,7 @@
 import { Application } from "jsr:@oak/oak/application";
 import { Router } from "jsr:@oak/oak/router";
-import { type Pill, render, restock, status, update } from "./mod.ts";
-import * as tmpl from "./page.tmpl.ts";
+import { render, restock, status, update } from "./mod.ts";
+import vento from "jsr:@vento/vento";
 
 type RestockBody = {
   name: string;
@@ -9,28 +9,27 @@ type RestockBody = {
   secret: string;
 };
 
-function indexPageHtml(table: string) {
-  return tmpl.index(table);
-}
+export type Config = {
+  port: number;
+  secret: string;
+};
 
-function adminPageHtml(pills: Pill["name"][]) {
-  return tmpl.admin(pills);
-}
-
-export async function listen(port: number) {
-  const secret = prompt("enter secret:");
+export async function listen({ port, secret }: Config) {
+  const env = vento();
 
   const routes = new Router();
   routes.get("/", async (ctx) => {
-    const page = await status().then(render).then(indexPageHtml);
-    ctx.response.body = page;
+    const page = await status().then(render).then((table) =>
+      env.run("tmpl/index.vto", { table })
+    );
+    ctx.response.body = page.content;
   });
 
   routes.get("/admin", async (ctx) => {
     const page = await status().then((result) =>
       result.pills.map((v) => v.name)
-    ).then((pills) => adminPageHtml(pills));
-    ctx.response.body = page;
+    ).then((pills) => env.run("tmpl/admin.vto", { pills }));
+    ctx.response.body = page.content;
   });
 
   routes.post("/restock", async (ctx) => {

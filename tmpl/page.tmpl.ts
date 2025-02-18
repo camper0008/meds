@@ -46,26 +46,8 @@ export function admin(pills: Pill["name"][]) {
     </form>
     <p id="response"></p>
     <script>
-      function main() {
-        const form = document.querySelector("#form");
-        const res = document.querySelector("#response");
-        form.addEventListener("submit", async (event) => {
-          event.preventDefault();
-          const formData = new FormData(form);
-          const body = {
-              secret: formData.get("secret"),
-              count: parseFloat(formData.get("count")),
-              name: formData.get("name"),
-          };
-          const response = await (await fetch("/restock", {
-            method: "POST",
-            body: JSON.stringify(body),
-          })).text()
-          res.innerText = response;
-        })
-      }
-      main();
     </script>
   `;
   return root("", body);
 }
+

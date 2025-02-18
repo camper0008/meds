@@ -135,11 +135,11 @@ export function render({ pills: unsortedPills, errors }: Result): string {
   const pills = unsortedPills.toSorted((a, b) => a.name.localeCompare(b.name));
 
   const defaultLength = {
-    name: 0,
-    perDay: 0,
-    count: 0,
-    daysLeft: 0,
-    leftOver: 0,
+    name: "name".length,
+    perDay: "perDay".length,
+    count: "count".length,
+    daysLeft: "daysLeft".length,
+    leftOver: "leftOver".length,
   };
 
   const count = (lengths: PillTableLength, pill: Pill, key: keyof Pill) =>

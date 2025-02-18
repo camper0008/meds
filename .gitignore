@@ -4,5 +4,8 @@ pills/*
 restock/*
 !restock/example.json
 
+# ignore secrets
+conf.json
+
 # ignore compiled binary
 meds

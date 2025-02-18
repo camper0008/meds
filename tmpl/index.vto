@@ -1,0 +1,5 @@
+{{ layout "./root.vto" { head: "<style>body { margin: 0; }</style>" } }}
+<pre>
+{{ table.split("\n").map(v => `  ${v}  `).join("\n") }}
+</pre>
+{{ /layout }}

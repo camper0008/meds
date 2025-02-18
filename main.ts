@@ -1,5 +1,16 @@
 import { render, status, update } from "./mod.ts";
-import { listen } from "./service.ts";
+import { Config, listen } from "./service.ts";
+
+async function configFromFile(path: string): Promise<Config | null> {
+  try {
+    return JSON.parse(await Deno.readTextFile(path));
+  } catch (err) {
+    if (!(err instanceof Deno.errors.NotFound)) {
+      throw err;
+    }
+    return null;
+  }
+}
 
 async function main() {
   const action = Deno.args[0];
@@ -13,19 +24,18 @@ async function main() {
       break;
     }
     case "service": {
-      const port = Deno.args[1];
-      try {
-        const parsed = parseInt(port);
-        await listen(parsed);
-      } catch {
-        console.error(`invalid port '${port}', expected int`);
+      const configPath = "conf.json";
+      const config = await configFromFile(configPath);
+      if (!config) {
+        console.error(`error: could not find config at '${configPath}'`);
         Deno.exit(1);
       }
+      await listen(config);
       break;
     }
     default: {
       console.error(
-        `unrecognized action '${action}', expected 'ext-serve' | 'status' | 'update'`,
+        `unrecognized action '${action}', expected 'service' | 'status' | 'update'`,
       );
       Deno.exit(1);
     }
