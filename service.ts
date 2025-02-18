@@ -1,7 +1,7 @@
 import { Application } from "jsr:@oak/oak/application";
 import { Router } from "jsr:@oak/oak/router";
 import { type Pill, render, restock, status, update } from "./mod.ts";
-import * as tmpl from "./oak_ext.tmpl.ts";
+import * as tmpl from "./page.tmpl.ts";
 
 type RestockBody = {
   name: string;
@@ -52,7 +52,10 @@ export async function listen(port: number) {
   app.use(routes.routes());
   app.use(routes.allowedMethods());
 
-  console.log("listening on", port);
+  app.addEventListener("listen", ({ port }) => {
+    console.log("listening on", port);
+  });
+
   await app.listen({ port });
 }
 

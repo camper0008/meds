@@ -1,5 +1,5 @@
 import { render, status, update } from "./mod.ts";
-import { listen } from "./oak_ext.ts";
+import { listen } from "./service.ts";
 
 async function main() {
   const action = Deno.args[0];
@@ -12,7 +12,7 @@ async function main() {
       console.log(await update().then(render));
       break;
     }
-    case "ext-serve": {
+    case "service": {
       const port = Deno.args[1];
       try {
         const parsed = parseInt(port);
