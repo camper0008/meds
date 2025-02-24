@@ -11,10 +11,11 @@ type RestockBody = {
 
 export type Config = {
   port: number;
+  hostname: string;
   secret: string;
 };
 
-export async function listen({ port, secret }: Config) {
+export async function listen({ port, hostname, secret }: Config) {
   const env = vento();
 
   const routes = new Router();
@@ -51,11 +52,11 @@ export async function listen({ port, secret }: Config) {
   app.use(routes.routes());
   app.use(routes.allowedMethods());
 
-  app.addEventListener("listen", ({ port }) => {
-    console.log("listening on", port);
+  app.addEventListener("listen", ({ port, hostname }) => {
+    console.log(`listening on ${hostname},`, port);
   });
 
-  await app.listen({ port });
+  await app.listen({ port, hostname });
 }
 
 Deno.cron("update at 20 00", "0 20 * * *", () => {
