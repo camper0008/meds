@@ -1,0 +1,5 @@
+{
+    "tasks": {
+        "service": "deno run --allow-net --allow-read --allow-write --unstable-cron main.ts service"
+    }
+}
