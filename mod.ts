@@ -113,6 +113,7 @@ async function runTask(update: boolean = true): Promise<Result> {
       const diff = restock - pill.perDay;
       pill.count += diff;
       await Deno.writeTextFile(`pills/${dirEntry.name}`, JSON.stringify(pill));
+      await Deno.writeTextFile(`last_update`, (new Date()).toString());
     }
     pills.push(filePillToPill(dirEntry.name, pill));
   }
